@@ -13,9 +13,9 @@ object Sudoku extends CPModel with App {
   var S: Matrix = createSudoku
 
   sudokuRange foreach { i =>
-    add(allDifferent(row(S)(i - 1)))
-    add(allDifferent(column(S)(i - 1)))
-    add(allDifferent(zone(S)(i - 1)))
+    add(allDifferent(row(S)(i)))
+    add(allDifferent(column(S)(i)))
+    add(allDifferent(zone(S)(i)))
   }
 
   search {
@@ -26,11 +26,11 @@ object Sudoku extends CPModel with App {
 
   start()
 
-  def row(a: Matrix)(r: Int): Array[CPIntVar] = a(r)
+  def row(a: Matrix)(r: Int): Array[CPIntVar] = a(r-1)
 
   def column(a: Matrix)(c: Int): Array[CPIntVar] = (for {
     i <- a.indices
-    v = a(i)(c)
+    v = a(i)(c-1)
   } yield v).toArray
 
   def subMatrix(a: Matrix)(rowRange: Range)(columnRange: Range): Array[CPIntVar] = for {
@@ -38,7 +38,13 @@ object Sudoku extends CPModel with App {
     j <- columnRange
   } yield a(i)(j)
 
-  def zone(a: Matrix)(i: Int): Array[CPIntVar] = i match {
+  /**
+    * Get a zone, ie a 3x3 region.
+    * @param a the matrix
+    * @param i the number of the zone, 0 is top left, then move left to right, finally change row.
+    * @return The variables inside the zone.
+    */
+  def zone(a: Matrix)(i: Int): Array[CPIntVar] = i-1 match {
     case 0 => subMatrix(a)(0 to 2)(0 to 2)
     case 1 => subMatrix(a)(0 to 2)(3 to 5)
     case 2 => subMatrix(a)(0 to 2)(6 to 8)
