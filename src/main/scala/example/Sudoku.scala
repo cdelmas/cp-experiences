@@ -26,25 +26,32 @@ object Sudoku extends CPModel with App {
 
   start()
 
-  def row(a: Matrix)(r: Int): Array[CPIntVar] = a(r-1)
+  // end of program itself
 
-  def column(a: Matrix)(c: Int): Array[CPIntVar] = (for {
-    i <- a.indices
-    v = a(i)(c-1)
-  } yield v).toArray
+  def row(a: Matrix)(r: Int): Array[CPIntVar] = a(r - 1)
 
-  def subMatrix(a: Matrix)(rowRange: Range)(columnRange: Range): Array[CPIntVar] = for {
-    i <- rowRange
-    j <- columnRange
-  } yield a(i)(j)
+  def column(a: Matrix)(c: Int): Array[CPIntVar] =
+    (for {
+      i <- a.indices
+      v = a(i)(c - 1)
+    } yield v).toArray
+
+  def subMatrix(
+      a: Matrix
+  )(rowRange: Range)(columnRange: Range): Array[CPIntVar] =
+    for {
+      i <- rowRange
+      j <- columnRange
+    } yield a(i)(j)
 
   /**
     * Get a zone, ie a 3x3 region.
+    *
     * @param a the matrix
     * @param i the number of the zone, 0 is top left, then move left to right, finally change row.
     * @return The variables inside the zone.
     */
-  def zone(a: Matrix)(i: Int): Array[CPIntVar] = i-1 match {
+  def zone(a: Matrix)(i: Int): Array[CPIntVar] = i - 1 match {
     case 0 => subMatrix(a)(0 to 2)(0 to 2)
     case 1 => subMatrix(a)(0 to 2)(3 to 5)
     case 2 => subMatrix(a)(0 to 2)(6 to 8)
@@ -56,15 +63,13 @@ object Sudoku extends CPModel with App {
     case 8 => subMatrix(a)(6 to 8)(6 to 8)
   }
 
-  def displaySolution(sol: Matrix): Unit = sol foreach { l =>
-    l.foreach { v =>
-      print(s"${v.value} ")
-    }
-    println()
-  }
+  def displaySolution(sol: Matrix): Unit =
+    println(sol map { l: Array[CPIntVar] =>
+      l map { _.value } mkString " "
+    } mkString "\n")
 
   def createSudoku: Matrix = {
-    val m =  Array.tabulate(size, size)((_,_) => CPIntVar(sudokuRange))
+    val m = Array.tabulate(size, size)((_, _) => CPIntVar(sudokuRange))
 
     // example sudoku
     /*
