@@ -13,7 +13,7 @@ object Triangle extends CPModel with App {
 
   add(X * X + Y * Y === H * H)
 
-  // maximize(X * Y) -> step 2
+  // maximize(X * Y) // -> step 2
 
   search {
     binaryFirstFail(Seq(X, Y, H))
