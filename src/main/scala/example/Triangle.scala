@@ -12,8 +12,9 @@ object Triangle extends CPModel with App {
   val H = CPIntVar(1 to max)
 
   add(X * X + Y * Y === H * H)
+  add(X + Y + H < 200)
 
-  // maximize(X * Y) // -> step 2
+  //maximize(X * Y) // -> step 2
 
   search {
     binaryFirstFail(Seq(X, Y, H))
@@ -23,5 +24,6 @@ object Triangle extends CPModel with App {
     )
   }
 
-  start(nSols = 10)
+  val stats = start()
+  println(stats)
 }
