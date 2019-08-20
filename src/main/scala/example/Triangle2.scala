@@ -2,7 +2,7 @@ package example
 
 import oscar.cp._
 
-object Triangle extends CPModel with App {
+object Triangle2 extends CPModel with App {
 
   val max = 200
 
@@ -14,11 +14,14 @@ object Triangle extends CPModel with App {
   add(X * X + Y * Y === H * H)
   add(X + Y + H < 200)
 
+  val A = X * Y
+  maximize(A)
+
   search {
-    binaryLastConflict(Array(X, Y, H))
+    binarySplit(Seq(X,Y,H))
   } onSolution {
     println(
-      s"Solution found, value of (X,Y,H) in this solution: + (${X.value},${Y.value},${H.value})}"
+      s"Solution found, value of (X,Y,H) in this solution: + (${X.value},${Y.value},${H.value}), area = ${(X.value * Y.value) / 2}"
     )
   }
 
