@@ -19,12 +19,13 @@ object Sudoku extends CPModel with App {
   }
 
   search {
-    binary(S(0))
+    binaryStatic(S(0))
   } onSolution {
     displaySolution(S)
   }
 
-  start()
+  val stats = start()
+  println(stats)
 
   // end of program itself
 
