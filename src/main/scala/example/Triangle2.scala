@@ -6,22 +6,22 @@ object Triangle2 extends CPModel with App {
 
   val max = 200
 
-  val X = CPIntVar(1 to max)
-  val Y = CPIntVar(1 to max)
+  val a = CPIntVar(1 to max)
+  val b = CPIntVar(1 to max)
 
-  val H = CPIntVar(1 to max)
+  val c = CPIntVar(1 to max)
 
-  add(X * X + Y * Y === H * H)
-  add(X + Y + H < 200)
+  add(a * a + b * b === c * c)
+  add(a + b + c < 200)
 
-  val A = X * Y
-  maximize(A)
+  val area = a * b // a * b / 2, x/2 est une fonction strictement croissante, donc inutile pour comparer ;)
+  maximize(area)
 
   search {
-    binarySplit(Seq(X,Y,H))
+    binarySplit(Seq(a,b,c))
   } onSolution {
     println(
-      s"Solution found, value of (X,Y,H) in this solution: + (${X.value},${Y.value},${H.value}), area = ${(X.value * Y.value) / 2}"
+      s"Solution found, value of (X,Y,H) in this solution: + (${a.value},${b.value},${c.value}), area = ${(a.value * b.value) / 2}"
     )
   }
 

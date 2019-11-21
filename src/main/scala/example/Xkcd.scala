@@ -21,18 +21,18 @@ object Xkcd extends CPModel with App {
   val num_prices = price.length
   val total = 1505
   // variables
-  val x = Array.fill(num_prices)(CPIntVar(0 to 10))
+  val quantities = Array.fill(num_prices)(CPIntVar(0 to 10))
   //
   // constraints
   //
   var numSols = 0
 
-  add(weightedSum(price, x) === total)
+  add(weightedSum(price, quantities) === total)
   search {
-    binaryFirstFail(x)
+    binaryFirstFail(quantities)
   }
   onSolution {
-    println("x:" + x.mkString(" "))
+    println("x:" + quantities.mkString(" "))
     numSols += 1
   }
   println(start())
