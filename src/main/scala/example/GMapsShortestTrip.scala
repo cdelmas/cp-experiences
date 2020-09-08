@@ -54,8 +54,8 @@ object GMapsShortestTrip extends CPModel with App {
     println(outputLocations(i) + "\t" + distMatrix(i).mkString("\t"))
   }
 
-  // Variable
-  val trip = Array.fill(outputLocations.size)(CPIntVar(outputLocations.size))
+  // Problem variable : array of n integer from 0 to n-1, n being the number of locations
+  val trip = Array.fill(outputLocations.size)(CPIntVar(outputLocations.indices))
 
   // Total distance & time calculation
   /**
@@ -67,10 +67,10 @@ object GMapsShortestTrip extends CPModel with App {
   def calculateSum(trip: Array[CPIntVar], matrix: Array[Array[Int]]) = {
     // for each step,
     trip.zipWithIndex.map { case(step, idx) =>
-      // get "distance" with next step (or first step for the last one, hence the modulo)
-      matrix(step)(trip((idx+1) % trip.length)).value
+      // get distance with next one (or first one for the last one, hence de modulo),
+      matrix(step)(trip((idx+1) % trip.length))
     // then sum them all
-    }.sum
+    }.reduceLeft(_ + _)
   }
   val totDist = calculateSum(trip, distMatrix)
   val totTime = calculateSum(trip, timeMatrix)
