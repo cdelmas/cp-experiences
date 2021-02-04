@@ -8,6 +8,6 @@ ThisBuild / organizationName := "cp-experiences"
 lazy val root = (project in file("."))
   .settings(
     name := "cp-experiences",
-    libraryDependencies ++= Seq(oscarCp, scalaTest % Test),
+    libraryDependencies ++= Seq(oscarCp, scalaTest % Test, scalajHttp, uPickle),
     resolvers += "Artifactory" at "http://artifactory.info.ucl.ac.be/artifactory/libs-release/"
   )
